@@ -1,5 +1,5 @@
 #################################################################################
-
+# CJ test to see if I am on the correct branch.
 """
 Youba Ltd. is a startup company that aims to revolutionize the local public transportation by
 introducing a brand new way for travellers to connect with drivers. Users only need
@@ -8,6 +8,7 @@ has contracted you to implement the platform for thier service.
 """
 
 import os
+
 
 #################################################################################
 # Driver Section
@@ -77,6 +78,7 @@ def get_driver_info(driver):
     """
     driver_info = driver[1]
     return driver_info
+
 
 # Gets the Drivers first name
 
@@ -183,6 +185,7 @@ def is_driver_new(driver):
     if num == 0:
         return True
     return False
+
 
 #################################################################################
 # Availability Queue Section
@@ -363,6 +366,7 @@ def remove_a_queue(a_queue, a_queue_list):
     else:
         print("There are no Availability Queues for this location.\n")
 
+
 #################################################################################
 # Fair Calculation Section
 #################################################################################
@@ -389,6 +393,7 @@ def calculate_discount(phone_num, passengers):
     passengers[phone_num] = 0
     return 0.00
 
+
 # Calculates the final fare for the customer
 
 
@@ -407,11 +412,12 @@ def calculate_fare(phone_num, price, passengers):
 
     discount = calculate_discount(phone_num, passengers)
 
-    discounted_fare = price - (price*discount)
+    discounted_fare = price - (price * discount)
 
     if discounted_fare < 0.00:
         return 0.00
     return discounted_fare
+
 
 #################################################################################
 # Taxi Section
@@ -543,6 +549,7 @@ def youba():
             print("* " + get_location(a_queue) + "\t\t" + get_first_name(driver) + " " +
                   get_last_name(driver) + "\t\t" + get_make_and_model(driver))
 
+
 #################################################################################
 # Main Section
 #################################################################################
@@ -582,7 +589,8 @@ if __name__ == '__main__':
 
     # Creates the Drivers with input information
     for i in range(no_of_drivers):
-        print("*   Enter the Drivers information.\n*   In the format - \"FirstName, LastName, CarMake|Model, LocationDestination\"")
+        print(
+            "*   Enter the Drivers information.\n*   In the format - \"FirstName, LastName, CarMake|Model, LocationDestination\"")
 
         driver_info = input().strip().split(",")
         # Driver ADT is created
@@ -600,7 +608,8 @@ if __name__ == '__main__':
 
     for i in range(no_of_known_passengers):
         print("\n*   In the format \"#######,Failed-trips\"")
-        print("*   Please enter the 7-digit phone number for Passenger {} and the number of Failed Attempts: ".format(i+1))
+        print("*   Please enter the 7-digit phone number for Passenger {} and the number of Failed Attempts: ".format(
+            i + 1))
         passenger = list(map(int, input().strip().split(",")))
         key = passenger[0]
         value = passenger[1]
