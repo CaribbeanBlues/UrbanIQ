@@ -16,6 +16,7 @@ import os
 #################################################################################
 
 
+# Parameter names are long, can be shortened to f_name, l_name, car_mk_mod
 def make_new_driver(first_name, last_name, car_make_and_model):
     """
     Constructs an ADT for a new Driver
@@ -158,6 +159,8 @@ def get_trips_completed(driver):
     return trips
 
 
+# Function name too long, change to inc_trips_done
+
 def increase_trips_completed(driver):
     """
     Increases the number of trips a Driver makes
@@ -192,6 +195,7 @@ def is_driver_new(driver):
 # Availability Queue Section
 #################################################################################
 
+# Function name too long, change to mk_ava_queue
 
 def make_availability_queue(location):
     """
@@ -374,6 +378,7 @@ def remove_a_queue(a_queue, a_queue_list):
 
 # Calculates the discount for a customer
 
+# Function name too long, change to calc_dis
 
 def calculate_discount(phone_num, passengers):
     """
@@ -397,6 +402,7 @@ def calculate_discount(phone_num, passengers):
 
 # Calculates the final fare for the customer
 
+# Function name too long, change to calc_fare
 
 def calculate_fare(phone_num, price, passengers):
     """
@@ -426,6 +432,7 @@ def calculate_fare(phone_num, price, passengers):
 
 # Moves a Driver from one location to the other
 
+# Parameter names to long, change to start_loc, end_loc
 
 def move_taxi(start_location, end_location, a_queue_list):
     """
@@ -447,6 +454,8 @@ def move_taxi(start_location, end_location, a_queue_list):
         a_queue_enqueue(get_a_queue(end_location, a_queue_list), driver)
         increase_trips_completed(driver)
 
+
+# Parameters names are long, can be changed to pass_num, pass_loc, pass_dest, ava_queue_lst
 
 def request_taxi(passenger_phone_num, passenger_location, passenger_destination, price, passengers, a_queue_list):
     """
