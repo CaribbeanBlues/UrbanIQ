@@ -1,5 +1,4 @@
 #################################################################################
-# CJ test to see if I am on the correct branch.
 """
 Youba Ltd. is a startup company that aims to revolutionize the local public transportation by
 introducing a brand new way for travellers to connect with drivers. Users only need
@@ -9,8 +8,8 @@ has contracted you to implement the platform for thier service.
 
 import os
 
-#Dwight's Test Comment
-
+#TODO Make each section its own .py file
+#TODO Run Pycharm's code analyzer
 #################################################################################
 # Driver Section
 #################################################################################
@@ -559,7 +558,18 @@ def youba():
             print("* " + get_location(a_queue) + "\t\t" + get_first_name(driver) + " " +
                   get_last_name(driver) + "\t\t" + get_make_and_model(driver))
 
+def make_av_queues():
+    a_queue_UWI = make_availability_queue("UWI")
+    a_queue_Papine = make_availability_queue("Papine")
+    a_queue_Liguanea = make_availability_queue("Liguanea")
+    a_queue_HalfWayTree = make_availability_queue("Half-Way-Tree")
+    return (a_queue_UWI,a_queue_Papine, a_queue_Papine, a_queue_Liguanea, a_queue_HalfWayTree)
 
+def add_to_av_queues(a_queue_list):
+    queues = make_av_queues()
+    for queue in queues:
+        add_a_queue(queue, a_queue_list)
+    return a_queue_list
 #################################################################################
 # Main Section
 #################################################################################
@@ -573,10 +583,6 @@ if __name__ == '__main__':
     print(lines + "\n")
 
     # Makes new Availability Queues
-    a_queue_UWI = make_availability_queue("UWI")
-    a_queue_Papine = make_availability_queue("Papine")
-    a_queue_Liguanea = make_availability_queue("Liguanea")
-    a_queue_HalfWayTree = make_availability_queue("Half-Way-Tree")
 
     # A list of queues
     a_queue_list = list()  # TODO Generate a list of Availability Queues
@@ -584,11 +590,8 @@ if __name__ == '__main__':
     known_passengers = dict()  # Generate a dictionary of customer info
 
     # Adds to the list of Available Queues
-    # TODO Automate this or allow user to customize
-    add_a_queue(a_queue_UWI, a_queue_list)
-    add_a_queue(a_queue_Papine, a_queue_list)
-    add_a_queue(a_queue_Liguanea, a_queue_list)
-    add_a_queue(a_queue_HalfWayTree, a_queue_list)
+    # TODO Automate this or allow user to customiz
+    add_to_av_queues(a_queue_list)
 
     # Represent the number of Drivers to create
     print(lines)
