@@ -7,9 +7,14 @@ has contracted you to implement the platform for thier service.
 """
 
 import os
+import sys
+import csv
+from library import *
 
-#TODO Make each section its own .py file
-#TODO Run Pycharm's code analyzer
+destination = 'database/destinations_database.csv'
+
+# TODO Make each section its own .py file
+# TODO Run Pycharm's code analyzer
 #################################################################################
 # Driver Section
 #################################################################################
@@ -515,21 +520,38 @@ def youba():
     print(lines)
     print("*   Currently, there are only 4 Destinations that we cover.\n*   There will be more in the Future.")
     print("*   They are: UWI, Papine, Liguanea & Half-Way-Tree.")
-    print("*   The price per trip is ${}\n*   Discounts will be added where neccessary.".format(fare))
+    # TODO Change format string to Fstrings
+    print(f"*   The price per trip is {fare} \n*   Discounts will be add where necessary.")
+
     print(lines)
     print("*   Would you like to Request our services?")
-    print("*   Enter Y for Yes")
-    print("*   Enter N for No\n")
-    request = input()
+    print("*   Enter 1 for Yes")
+    print("*   Enter 0 for No\n")
+    request = validate_yesno_input()
 
-    while (request == "Y" or request == "y"):
+    if request != 1:
+        print("*    Would you like to exit YOUBA?")
+        print("Enter 0 again to quit")
+        cancel = validate_yesno_input()
+        if cancel == 0:
+            sys.exit()
+        request = 1
+    # TODO Change Y and N to 1 and 0
+
+    while request == 1:
         print(lines)
-        print("*   What is your phone number?:")
-        passenger_phone_num = int(input())
-        print("*   What is your Location?:")
-        passenger_location = input()
-        print("*   What is your Destination?:")
-        passenger_destination = input()
+        # TODO change all phone numbers into Strings
+
+        passenger_phone_num = validate_reconfirmation("Phone Number")
+        passenger_location = validate_reconfirmation("Location")
+
+        # TODO validate destination
+        # while True:
+        passenger_destination = validate_reconfirmation("Destination")
+        # if passenger_destination in a_queue_list:
+        #     break
+        # else:
+        #     print("*    Please enter a valid destination")
 
         request_taxi(passenger_phone_num, passenger_location,
                      passenger_destination, fare, known_passengers, a_queue_list)
@@ -558,18 +580,66 @@ def youba():
             print("* " + get_location(a_queue) + "\t\t" + get_first_name(driver) + " " +
                   get_last_name(driver) + "\t\t" + get_make_and_model(driver))
 
-def make_av_queues():
-    a_queue_UWI = make_availability_queue("UWI")
-    a_queue_Papine = make_availability_queue("Papine")
-    a_queue_Liguanea = make_availability_queue("Liguanea")
-    a_queue_HalfWayTree = make_availability_queue("Half-Way-Tree")
-    return (a_queue_UWI,a_queue_Papine, a_queue_Papine, a_queue_Liguanea, a_queue_HalfWayTree)
 
-def add_to_av_queues(a_queue_list):
-    queues = make_av_queues()
-    for queue in queues:
-        add_a_queue(queue, a_queue_list)
-    return a_queue_list
+# def validate_yesno_input():
+#     """
+#     Prompts for a binary yes/no input. If not 0 or 1, reprompt for entry
+#     Returns:
+#          1 for yes, 0 for no
+#
+#     """
+#     while True:
+#         try:
+#             request = int(input())
+#         except ValueError:
+#             print("*    Please only enter 1 for Yes or 0 for No.")
+#             continue
+#         else:
+#             while request not in (0, 1):
+#                 print("*    Please only enter 1 for Yes or 0 for No.")
+#                 request = int(input())
+#         return request
+#
+#
+# def validate_reconfirmation(entry_name):
+#     """
+#     Displays input and confirms entry with user. User presses 1 to confirm, or 0 to renter
+#     Args:
+#         entry_name:
+#
+#     Returns:
+#         validated user input
+#     """
+#     while True:
+#         print(f"*   What is your {entry_name}:")
+#         entry = input()
+#         print(f"*   Is this your {entry_name}: {entry}")
+#         print("*    Please enter 1 for Yes, 0 for no")
+#         confirm = validate_yesno_input()
+#         if confirm == 1:
+#             return entry
+#
+# def validate_standard_string():
+#     entries = input()
+#     entries = entries.rstrip()
+#     entries = entries.lstrip()
+#
+#
+# def make_av_queues():
+#     a_queue_UWI = make_availability_queue("UWI")
+#     a_queue_Papine = make_availability_queue("Papine")
+#     a_queue_Liguanea = make_availability_queue("Liguanea")
+#     a_queue_HalfWayTree = make_availability_queue("Half-Way-Tree")
+#     return (a_queue_UWI, a_queue_Papine, a_queue_Papine, a_queue_Liguanea, a_queue_HalfWayTree)
+#
+#
+# def add_to_av_queues(a_queue_list):
+#     queues = make_av_queues()
+#     for queue in queues:
+#         add_a_queue(queue, a_queue_list)
+#     return a_queue_list
+
+
 #################################################################################
 # Main Section
 #################################################################################
@@ -579,7 +649,7 @@ if __name__ == '__main__':
     lines = "********************************************************************"
     print(lines)
     print("*   Welcome to the Admin side.")
-    print("*   Please setup the Youba data with the neccesary information.")
+    print("*   Please setup the Youba data with the necessary information.")
     print(lines + "\n")
 
     # Makes new Availability Queues
@@ -639,3 +709,15 @@ if __name__ == '__main__':
 
 #################################################################################
 #################################################################################
+    def make_av_queues():
+        a_queue_UWI = make_availability_queue("UWI")
+        a_queue_Papine = make_availability_queue("Papine")
+        a_queue_Liguanea = make_availability_queue("Liguanea")
+        a_queue_HalfWayTree = make_availability_queue("Half-Way-Tree")
+        return (a_queue_UWI, a_queue_Papine, a_queue_Papine, a_queue_Liguanea, a_queue_HalfWayTree)
+
+    def add_to_av_queues(a_queue_list):
+        queues = make_av_queues()
+        for queue in queues:
+            add_a_queue(queue, a_queue_list)
+        return a_queue_list
