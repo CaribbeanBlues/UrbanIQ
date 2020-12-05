@@ -14,7 +14,7 @@ def make_availability_queue(location):
     Returns:
         a_queue: An Availability Queue ADT
     """
-    a_queue = ("AvailabilityQueue", location, [])
+    a_queue = ("AvailabilityQueue", [])
     return a_queue
 
 

@@ -1,4 +1,4 @@
-from library import *
+from Library import *
 
 def youba():
     """

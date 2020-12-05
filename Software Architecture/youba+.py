@@ -3,642 +3,46 @@
 Youba Ltd. is a startup company that aims to revolutionize the local public transportation by
 introducing a brand new way for travellers to connect with drivers. Users only need
 to have a cellphone to utilize the service. Given your knowledge of ADTs, Youba Ltd.
-has contracted you to implement the platform for thier service.
+has contracted you to implement the platform for their service.
 """
 
 import os
 import sys
 import csv
-from library import *
+from Library import *
 
-destination = 'database/destinations_database.csv'
+dest_db = 'database/destinations_database.csv'
+num_db = 'database/numbers_database.csv'
+queue_dict = {}
+with open(dest_db) as f:
+    reader = csv.reader(f)
+    header_row = next(reader)
+    destinations = []
+    for row in reader:
+        destinations.append(row[1])
+with open(num_db) as f:
+    reader = csv.reader(f)
+    header_row = next(reader)
+    numbers = {}
+    for row in reader:
+        numbers[row[0]] = row[1]
+
+
+def make_av_queues():
+    for destination in destinations:
+        queue_dict[destination] = queue.make_availability_queue(destination)
+    return queue_dict
+
+
+def add_to_av_queues(a_queue_list):
+    return make_av_queues()
+
+def add_destination(loc):
+    with open(destination, 'a') as f:
+        f.write(loc)
 
 # TODO Make each section its own .py file
 # TODO Run Pycharm's code analyzer
-#################################################################################
-# Driver Section
-#################################################################################
-
-
-# Parameter names are long, can be shortened to f_name, l_name, car_mk_mod
-def make_new_driver(first_name, last_name, car_make_and_model):
-    """
-    Constructs an ADT for a new Driver
-
-    Args:
-        first_name: Drivers first name
-        last_name: Drivers last name
-        car_make_and_model: Drivers car make and model
-
-    Returns:
-        driver: A Driver ADT
-    """
-    trips_completed = 0
-    return ("Driver", [first_name, last_name, car_make_and_model,
-                       trips_completed])
-
-
-def make_driver(first_name, last_name, car_make_and_model, trips_completed):
-    """
-    Constructs an ADT for an existing Driver
-
-    Args:
-        first_name: Drivers first name
-        last_name: Drivers last name
-        car_make_and_model: Drivers car make and model
-        trips_completed: Number of trips made per day
-
-    Returns:
-        driver: A Driver ADT
-    """
-    return ("Driver", [first_name, last_name, car_make_and_model,
-                       trips_completed])
-
-
-def is_driver(driver):
-    """
-    Determines whether an object is a Driver
-
-    Args:
-        driver: A Driver ADT
-
-    Returns:
-        boolean: True or False
-    """
-    if len(driver) == 2 and driver[0] == "Driver":
-        driver_info = get_driver_info(driver)
-        if type(driver_info) == type([]) and len(driver_info) == 4:
-            return True
-    return False
-
-
-def get_driver_info(driver):
-    """
-    Gets the list of Driver details
-
-    Args:
-        driver: A Driver ADT
-
-    Returns:
-        driver_info: list of Driver information
-    """
-    driver_info = driver[1]
-    return driver_info
-
-
-# Gets the Drivers first name
-
-
-def get_first_name(driver):
-    """
-
-
-    Args:
-        driver: A Driver ADT
-
-    Returns:
-        f_name: Drivers first name
-    """
-    f_name = get_driver_info(driver)[0]
-    return f_name
-
-
-def get_last_name(driver):
-    """
-    Gets the Drivers last name
-
-    Args:
-        driver: A Driver ADT
-
-    Returns:
-        l_name: Drivers last name
-    """
-    l_name = get_driver_info(driver)[1]
-    return l_name
-
-
-def get_make_and_model(driver):
-    """
-    Gets the Drivers car make and model
-
-    Args:
-        driver: A Driver ADT
-
-    Returns:
-        make_model: Drivers care make and model
-    """
-    make_model = get_driver_info(driver)[2]
-    return make_model
-
-
-def change_make_and_model(driver, new_make_model):
-    """
-    Updates the Drivers car make and model
-
-    Args:
-        driver: A Driver ADT
-
-    Returns:
-        None
-    """
-    if is_driver(driver):
-        driver_info = get_driver_info(driver)
-        driver_info[2] = new_make_model
-    else:
-        print("*\n*   ERROR: ")
-        print("*   Didn't receive a Driver\n")
-
-
-def get_trips_completed(driver):
-    """
-    Gets the Drivers number of trips completed for the day
-
-    Args:
-        driver: A Driver ADT
-
-    Returns:
-        trips: Drivers total trips completed
-    """
-    trips = get_driver_info(driver)[3]
-    return trips
-
-
-# Function name too long, change to inc_trips_done
-
-def increase_trips_completed(driver):
-    """
-    Increases the number of trips a Driver makes
-
-    Args:
-        driver: A Driver ADT
-
-    Returns:
-        None
-    """
-    driver_info = get_driver_info(driver)
-    driver_info[3] = get_trips_completed(driver) + 1
-
-
-def is_driver_new(driver):
-    """
-    Determines whether a Driver is new or not
-
-    Args:
-        driver: A Driver ADT
-
-    Returns:
-        boolean: True or False
-    """
-    num = get_trips_completed(driver)
-    if num == 0:
-        return True
-    return False
-
-
-#################################################################################
-# Availability Queue Section
-#################################################################################
-
-# Function name too long, change to mk_ava_queue
-
-def make_availability_queue(location):
-    """
-    Creates an Availability Queue
-
-    Args:
-        location: A location
-
-    Returns:
-        a_queue: An Availability Queue ADT
-    """
-    a_queue = ("AvailabilityQueue", location, [])
-    return a_queue
-
-
-def get_queue_contents(a_queue):
-    """
-    Gets Availability Queue contents
-
-    Args:
-        a_queue: An Availability Queue ADT
-
-    Returns:
-        queue_contents: The list of Drivers at an Availability Queue
-    """
-    queue_contents = a_queue[2]
-    return queue_contents
-
-
-def get_a_queue(location_name, a_queue_list):
-    """
-    Gets the Availability Queue from the list based on location
-
-    Args:
-        location_name: A location
-        a_queue_list: A list of Availability Queues
-
-    Returns:
-        a_queue: An Availability Queue ADT
-    """
-    for a_queue in a_queue_list:
-        if get_location(a_queue) == location_name:
-            return a_queue
-    print("There are no Availability Queues for this location.")
-    return make_availability_queue("")
-
-
-def is_a_queue(a_queue):
-    """
-    Check if an Availability Queue is empty/ doesn't exist.
-    This is separate from an availability queue not having drivers.
-
-    Args:
-        a_queue: An Availability Queue ADT
-
-    Returns:
-        boolean: True or False
-    """
-    if get_location(a_queue) == "":
-        return False
-    return True
-
-
-def get_location(a_queue):
-    """
-    Gets the Availability Queue location name
-
-    Args:
-        a_queue: An Availability Queue ADT
-
-    Returns:
-        location: The location of an Availability Queue
-    """
-    location = get_driver_info(a_queue)
-    return location
-
-
-def a_queue_front(a_queue):
-    """
-    Returns the first Driver in the Availability Queue list
-
-    Args:
-        a_queue: An Availability Queue ADT
-
-    Returns:
-        driver: An ADT representing a Driver
-    """
-    if is_a_queue_empty(a_queue):
-        print("\nThere are no Taxi Drivers present at the moment.\n")
-        return make_availability_queue("")
-    else:
-        return get_queue_contents(a_queue)[0]
-
-
-def a_queue_enqueue(a_queue, driver):
-    """
-    Adds a driver to an Availability Queue list
-
-    Args:
-        a_queue: An Availability Queue ADT
-        driver: A Driver ADT
-
-    Returns:
-        None
-    """
-    get_queue_contents(a_queue).append(driver)
-
-
-def a_queue_dequeue(a_queue):
-    """
-    Removes a driver from an Availability Queue list
-
-    Args:
-        a_queue: An Availability Queue ADT
-
-    Returns:
-        None
-    """
-    if is_a_queue_empty(a_queue):
-        print("\nERROR.\nThere are no Drivers at this Location to remove.\n")
-    else:
-        get_queue_contents(a_queue).pop(0)
-
-
-def is_a_queue_empty(a_queue):
-    """
-    Checks to see if an Availability Queue is Empty
-
-    Args:
-        a_queue: An Availability Queue ADT
-
-    Returns:
-        boolean: True or False
-    """
-    if get_queue_contents(a_queue) == []:
-        return True
-    return False
-
-
-def add_a_queue(a_queue, a_queue_list):
-    """
-    Adds an Availability Queue to the list of Availability Queues
-
-    Args:
-        a_queue: An Availability Queue ADT
-        a_queue_list: A list of Availability Queues
-
-    Returns:
-        None
-    """
-    a_queue_list.append(a_queue)
-
-
-def remove_a_queue(a_queue, a_queue_list):
-    """
-    Removes an Availability Queue from the list of Availability Queues
-
-    Args:
-        a_queue: An Availability Queue ADT
-        a_queue_list: A list of Availability Queues
-
-    Returns:
-        None
-    """
-    x = -1
-    for i in range(len(a_queue_list)):
-        if a_queue_list[i] == a_queue:
-            x = i
-            break
-
-    if x != -1:
-        a_queue_list.pop(x)
-    else:
-        print("There are no Availability Queues for this location.\n")
-
-
-#################################################################################
-# Fair Calculation Section
-#################################################################################
-
-# Calculates the discount for a customer
-
-# Function name too long, change to calc_dis
-
-def calculate_discount(phone_num, passengers):
-    """
-    Calculates the discount to be applied for a customer
-
-    Args:
-        phone_num: Customers telephone number
-        passengers: Dictionary of Customers information
-
-    Returns:
-        failed_attempts: A float value of discounted price
-    """
-
-    for number, failed_attempts in passengers.items():
-        if number == phone_num:
-            return failed_attempts * 0.10
-
-    passengers[phone_num] = 0
-    return 0.00
-
-
-# Calculates the final fare for the customer
-
-# Function name too long, change to calc_fare
-
-def calculate_fare(phone_num, price, passengers):
-    """
-    Calculates the customers total fare after discount has been applied
-
-    Args:
-        phone_num: Customers telephone number
-        price: The cost per taxi trip
-        passengers: Dictionary of Customers information
-
-    Returns:
-        discounted_fare: Discounted price
-    """
-
-    discount = calculate_discount(phone_num, passengers)
-
-    discounted_fare = price - (price * discount)
-
-    if discounted_fare < 0.00:
-        return 0.00
-    return discounted_fare
-
-
-#################################################################################
-# Taxi Section
-#################################################################################
-
-# Moves a Driver from one location to the other
-
-# Parameter names to long, change to start_loc, end_loc
-
-def move_taxi(start_location, end_location, a_queue_list):
-    """
-    Moves a taxi from one location to another with an Availability Queue list
-
-    Args:
-        start_location: Customers current location
-        end_location: Customers desired destination
-        a_queue_list: A list of Availability Queues
-
-    Returns:
-        None
-    """
-    if is_a_queue_empty(get_a_queue(start_location, a_queue_list)):
-        print("*   No driver at location.\n")
-    else:
-        driver = a_queue_front(get_a_queue(start_location, a_queue_list))
-        a_queue_dequeue(get_a_queue(start_location, a_queue_list))
-        a_queue_enqueue(get_a_queue(end_location, a_queue_list), driver)
-        increase_trips_completed(driver)
-
-
-# Parameters names are long, can be changed to pass_num, pass_loc, pass_dest, ava_queue_lst
-
-def request_taxi(passenger_phone_num, passenger_location, passenger_destination, price, passengers, a_queue_list):
-    """
-    Requests a taxi for a customer at a specific location
-
-    Args:
-        passenger_phone_num: Customers telephone number
-        passenger_location: Customers current location
-        passenger_destination: Customers desired destination
-        price: Cost per trip
-        passengers: A dictionary of customers and their failed attempts
-        a_queue_list: A list of Availability Queues
-
-    Returns:
-       None
-    """
-    if passenger_location == passenger_destination:
-        print("\n*\n*   Start and end locations are the same!\n*\n")
-    else:
-        # Fare for the trip is calculated
-        trip_fare = calculate_fare(passenger_phone_num, price, passengers)
-        print("*   Your final fare is ${}.".format(trip_fare))
-
-        option = input(
-            "*   Enter \"Y\" to confirm the trip or \"N\" to cancel - ")
-        if option == "Y" or option == "y":
-            if is_a_queue_empty(get_a_queue(passenger_location, a_queue_list)):
-                passengers[passenger_phone_num] += 1
-                print("\n*   Unfortunately, there are no drivers at that location.")
-                print("*   We apologize for any inconvenience.")
-                print("*   You will receive a 10% discount on your next trip.")
-            else:
-                print(lines)
-                print("*   A Taxi is on the way.\n")
-                print(lines)
-                move_taxi(passenger_location,
-                          passenger_destination, a_queue_list)
-        else:
-            print(lines)
-            print("*   Cancelling trip")
-            print(lines)
-
-
-#################################################################################
-# Youba Section
-#################################################################################
-
-def youba():
-    """
-    Handles the Customer side of the service
-
-    Args:
-        None
-
-    Returns:
-        None
-    """
-    print(lines)
-    print("*   Currently, there are only 4 Destinations that we cover.\n*   There will be more in the Future.")
-    print("*   They are: UWI, Papine, Liguanea & Half-Way-Tree.")
-    # TODO Change format string to Fstrings
-    print(f"*   The price per trip is {fare} \n*   Discounts will be add where necessary.")
-
-    print(lines)
-    print("*   Would you like to Request our services?")
-    print("*   Enter 1 for Yes")
-    print("*   Enter 0 for No\n")
-    request = validate_yesno_input()
-
-    if request != 1:
-        print("*    Would you like to exit YOUBA?")
-        print("Enter 0 again to quit")
-        cancel = validate_yesno_input()
-        if cancel == 0:
-            sys.exit()
-        request = 1
-    # TODO Change Y and N to 1 and 0
-
-    while request == 1:
-        print(lines)
-        # TODO change all phone numbers into Strings
-
-        passenger_phone_num = validate_reconfirmation("Phone Number")
-        passenger_location = validate_reconfirmation("Location")
-
-        # TODO validate destination
-        # while True:
-        passenger_destination = validate_reconfirmation("Destination")
-        # if passenger_destination in a_queue_list:
-        #     break
-        # else:
-        #     print("*    Please enter a valid destination")
-
-        request_taxi(passenger_phone_num, passenger_location,
-                     passenger_destination, fare, known_passengers, a_queue_list)
-
-        print("\n*   Would you like to Request our services again?")
-        print("*   Enter Y for Yes")
-        print("*   Enter N for No")
-        request = input()
-
-    print(lines)
-    print("Thank you for trying Youba. Please come again.\n")
-    print("A list will be printed upon exit.")
-    print("List of Drivers and Number of Jobs Completed.")
-
-    for a_queue in a_queue_list:
-        for driver in get_queue_contents(a_queue):
-            print(get_first_name(driver) + "\t" + get_last_name(driver) + "\t" +
-                  str(get_trips_completed(driver)))
-    print(lines)
-    print("*   List of Locations and Drivers for those that worked today.")
-    print("* Current Location\tDriver Name\tCar Make & Model")
-
-    for a_queue in a_queue_list:
-        if not is_a_queue_empty(a_queue):
-            driver = a_queue_front(a_queue)
-            print("* " + get_location(a_queue) + "\t\t" + get_first_name(driver) + " " +
-                  get_last_name(driver) + "\t\t" + get_make_and_model(driver))
-
-
-# def validate_yesno_input():
-#     """
-#     Prompts for a binary yes/no input. If not 0 or 1, reprompt for entry
-#     Returns:
-#          1 for yes, 0 for no
-#
-#     """
-#     while True:
-#         try:
-#             request = int(input())
-#         except ValueError:
-#             print("*    Please only enter 1 for Yes or 0 for No.")
-#             continue
-#         else:
-#             while request not in (0, 1):
-#                 print("*    Please only enter 1 for Yes or 0 for No.")
-#                 request = int(input())
-#         return request
-#
-#
-# def validate_reconfirmation(entry_name):
-#     """
-#     Displays input and confirms entry with user. User presses 1 to confirm, or 0 to renter
-#     Args:
-#         entry_name:
-#
-#     Returns:
-#         validated user input
-#     """
-#     while True:
-#         print(f"*   What is your {entry_name}:")
-#         entry = input()
-#         print(f"*   Is this your {entry_name}: {entry}")
-#         print("*    Please enter 1 for Yes, 0 for no")
-#         confirm = validate_yesno_input()
-#         if confirm == 1:
-#             return entry
-#
-# def validate_standard_string():
-#     entries = input()
-#     entries = entries.rstrip()
-#     entries = entries.lstrip()
-#
-#
-# def make_av_queues():
-#     a_queue_UWI = make_availability_queue("UWI")
-#     a_queue_Papine = make_availability_queue("Papine")
-#     a_queue_Liguanea = make_availability_queue("Liguanea")
-#     a_queue_HalfWayTree = make_availability_queue("Half-Way-Tree")
-#     return (a_queue_UWI, a_queue_Papine, a_queue_Papine, a_queue_Liguanea, a_queue_HalfWayTree)
-#
-#
-# def add_to_av_queues(a_queue_list):
-#     queues = make_av_queues()
-#     for queue in queues:
-#         add_a_queue(queue, a_queue_list)
-#     return a_queue_list
-
 
 #################################################################################
 # Main Section
@@ -655,9 +59,9 @@ if __name__ == '__main__':
     # Makes new Availability Queues
 
     # A list of queues
-    a_queue_list = list()  # TODO Generate a list of Availability Queues
+    a_queue_list = make_av_queues()  # TODO Generate a list of Availability Queues
     # A dictionary of customers and their failed attempts
-    known_passengers = dict()  # Generate a dictionary of customer info
+    known_passengers = numbers
 
     # Adds to the list of Available Queues
     # TODO Automate this or allow user to customiz
@@ -691,8 +95,7 @@ if __name__ == '__main__':
 
     for i in range(no_of_known_passengers):
         print("\n*   In the format \"#######,Failed-trips\"")
-        print("*   Please enter the 7-digit phone number for Passenger {} and the number of Failed Attempts: ".format(
-            i + 1))
+        print(f"*   Please enter the 7-digit phone number for Passenger {i + 1} and the number of Failed Attempts: ")
         passenger = list(map(int, input().strip().split(",")))
         key = passenger[0]
         value = passenger[1]
@@ -709,15 +112,21 @@ if __name__ == '__main__':
 
 #################################################################################
 #################################################################################
-    def make_av_queues():
-        a_queue_UWI = make_availability_queue("UWI")
-        a_queue_Papine = make_availability_queue("Papine")
-        a_queue_Liguanea = make_availability_queue("Liguanea")
-        a_queue_HalfWayTree = make_availability_queue("Half-Way-Tree")
-        return (a_queue_UWI, a_queue_Papine, a_queue_Papine, a_queue_Liguanea, a_queue_HalfWayTree)
 
-    def add_to_av_queues(a_queue_list):
-        queues = make_av_queues()
-        for queue in queues:
-            add_a_queue(queue, a_queue_list)
-        return a_queue_list
+
+# Good day! Welcome to Admin side! What would you like to do!
+# 1. Manage Drivers: (should show a list of drivers)
+#   1: Add New Driver
+#   2: Edit Drivers
+#   3: Delete Driver
+# 2. Manage Destinations: (should show list of destinations)
+#   1: Add new Destinations
+#   2: Edit destinations
+#   3: Delete Destinations
+# 3. Manage Rates
+#
+#
+# 4. Manage Customers (should show list of numbers and failed attempts)
+#   1: Add new customer
+#   2: Edit customer
+#   3: Delete customer
