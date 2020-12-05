@@ -3,86 +3,120 @@ from csv import writer
 
 dest_db = 'destinations_database.csv'
 num_db = 'numbers_database.csv'
+drv_db = 'driver_database.csv'
 
 
-def get_all_destinations():
+def get_header(db):
     """
-    Loads all destinations from destinations_database.csv
-    Returns: list of destinations from the CSV file
+    Gets the header row
+    Args:
+        db: A path to the needed .csv file
+
+    Returns: a list containing the header of the file
 
     """
-    with open(dest_db) as f:
+    with open(db) as f:
         reader = csv.reader(f)
         header_row = next(reader)
-        destinations = []
+    return header_row
+
+
+def get_all_items(db):
+    """
+    Loads all items from destinations_database.csv
+    Returns: list of items from the CSV file
+
+    """
+    with open(db) as f:
+        reader = csv.reader(f)
+        header_row = next(reader)
+        items = {}
         for row in reader:
-            # destinations[int(row[0])] = row[1]
-            destinations.append(row)
-        return destinations
+            if len(row) <= 2:
+                items[int(row[0])] = row[1]
+            else:
+                items[int(row[0])] = row[1:]
+        return items
 
 
-def insert_destination(destination):
+def insert_item(db, item):
     """
     Inserts a destination into destinations_database.csv
-    Args: A dictionary containing the location and its ID
+    Args:
+        db: A path to the needed .csv file
+        item: A list containing the items to be inserted
 
     """
-    with open(dest_db, 'a+', newline='') as write_obj:
+    with open(db, 'a+', newline='') as write_obj:
         csv_writer = writer(write_obj)
-        csv_writer.writerow(destination)
+        csv_writer.writerow(item)
 
 
-
-def get_destinations(id):
+def get_item(db, item_id):
     """
 
     Args:
-        id: The ID of the destination
+        db: A path to the needed .csv file
+        item_id: The id of the item to be returned
 
-    Returns: Destination string of a given ID
+    Returns: item string of a given ID
 
     """
-    destinations = get_all_destinations()
+    items = get_all_items(db)
     try:
-        return destinations[id]
+        return items[item_id]
     except KeyError:
         pass
-    return {}
+    return []
 
-def delete_destination(dest_id):
+
+def delete_item(db, item_id):
     """
     Deletes a destination from the database
     Args:
-        dest_id: id of destination
+        db: A path to the needed .csv file
+        item_id: id of item to be deleted
 
     Returns:
 
     """
-    dest_id =- 1
-    destinations = get_all_destinations()
-    destinations.pop(dest_id)
-    with open(dest_db, 'w+', newline='') as write_obj:
+    items = get_all_items(db)
+    del items[item_id]
+    rewrite_db(db, items)
+
+
+def edit_item(db, item_id, edited_item):
+    """
+    Edits an item in the database
+    Args:
+        db: A path to the needed .csv file
+        item_id: The id of the item to be edited
+        edited_item: The new item to be added
+
+    Returns:
+
+    """
+    items = get_all_items(db)
+    items[item_id] = edited_item
+    rewrite_db(db, items)
+
+
+def rewrite_db(db, items):
+    """
+    Rewrites the database given a dictionary. Note that this must be used to update or delete .csv files
+    Args:
+        db: A path to the needed .csv file
+        items: A dictionary of the items that will serve as the source to rewrite the .csv
+
+    Returns:
+
+    """
+    header = get_header(db)
+    with open(db, 'w+', newline='') as write_obj:
         csv_write = writer(write_obj)
-        csv_write.writerow(("id", "destination"))
-        for dest_row in destinations:
-            csv_write.writerow(dest_row)
-
-def edit_destination(dest_id, destination):
-    destinations = get_all_destinations()
-    print(destinations)
-    # destinations[dest_id] = destinations
-    # print(destinations)
+        csv_write.writerow(header)
+        for item_row in items.items():
+            csv_write.writerow(item_row)
 
 
-
-# def insert_driver(driver):
-#     """
-#     Inserts a driveer into drivers_database.csv
-#     Args:
-#         driver: a list containing the driver's necessary information
-#
-#     """
-#     with open()
-
-
-print(delete_destination(5))
+print(delete_item(dest_db, 5))
