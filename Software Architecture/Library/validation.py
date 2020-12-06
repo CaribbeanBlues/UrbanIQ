@@ -1,6 +1,6 @@
 def validate_yesno_input():
     """
-    Prompts for a binary yes/no input. If not 0 or 1, reprompt for entry
+    Prompts for a binary yes/no input. If not 0 or 1, re-prompt for entry
     Returns:
          1 for yes, 0 for no
 

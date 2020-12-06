@@ -1,10 +1,6 @@
 import csv
 from csv import writer
 
-dest_db = 'destinations_database.csv'
-num_db = 'numbers_database.csv'
-drv_db = 'driver_database.csv'
-
 
 def get_header(db):
     """
@@ -67,7 +63,6 @@ def get_item(db, item_id):
         return items[item_id]
     except KeyError:
         pass
-    return []
 
 
 def delete_item(db, item_id):
@@ -117,6 +112,3 @@ def rewrite_db(db, items):
         csv_write.writerow(header)
         for item_row in items.items():
             csv_write.writerow(item_row)
-
-
-print(delete_item(dest_db, 5))
